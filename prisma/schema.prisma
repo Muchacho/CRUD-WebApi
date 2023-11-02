@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model meetups {
+  id          Int        @id @default(autoincrement())
+  name        String?    @unique @db.VarChar(50)
+  description String?
+  time        DateTime?  @db.Timestamp(6)
+  address     String?    @db.VarChar(60)
+  keywords    keywords[]
+}
+
+model keywords {
+  id       Int      @id @default(autoincrement())
+  word     String?  @db.VarChar(50)
+  meetupid Int?
+  meetups  meetups? @relation(fields: [meetupid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_meetup")
+}
